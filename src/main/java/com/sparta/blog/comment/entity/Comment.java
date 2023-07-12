@@ -19,8 +19,8 @@ public class Comment extends TimeStamped {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "content", nullable = false)
-    private String content;
+    @Column(name = "contents", nullable = false)
+    private String contents;
 
     @Column(name = "username", nullable = false)
     private String username;
@@ -31,11 +31,11 @@ public class Comment extends TimeStamped {
     private Post post;
 
     public Comment(CommentRequestDto requestDto, String username){
-        this.content = requestDto.getContent();
+        this.contents = requestDto.getContents();
         this.username = username;
     }
 
     public void update(CommentRequestDto requestDto) {
-        this.content = requestDto.getContent();
+        this.contents = requestDto.getContents();
     }
 }

@@ -9,14 +9,14 @@ import java.time.LocalDateTime;
 public class CommentResponseDto {
     private Long commentId;
     private String username;
-    private String content;
+    private String contents;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 
     public CommentResponseDto(Comment comment) {
         this.commentId = comment.getId();
         this.username = comment.getUsername();
-        this.content = comment.getContent();
+        this.contents = comment.getContents();
         this.createdAt = comment.getCreatedAt();
         this.modifiedAt = comment.getModifiedAt();
     }
