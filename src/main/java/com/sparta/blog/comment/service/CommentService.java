@@ -3,28 +3,28 @@ package com.sparta.blog.comment.service;
 import com.sparta.blog.comment.dto.CommentRequestDto;
 import com.sparta.blog.comment.dto.CommentResponseDto;
 import com.sparta.blog.comment.entity.Comment;
+import com.sparta.blog.common.dto.ApiResponseDto;
 import com.sparta.blog.common.error.BlogErrorCode;
 import com.sparta.blog.common.exception.BlogException;
+import com.sparta.blog.like.comment.entity.CommentLike;
+import com.sparta.blog.like.comment.repository.CommentLikeRepository;
 import com.sparta.blog.post.entity.Post;
 import com.sparta.blog.user.entity.User;
 import com.sparta.blog.common.jwt.JwtUtil;
 import com.sparta.blog.comment.repository.CommentRepository;
 import com.sparta.blog.post.repository.PostRepository;
 import com.sparta.blog.user.entity.UserRoleEnum;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@RequiredArgsConstructor
 @Service
 public class CommentService {
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
+    private final CommentLikeRepository commentLikeRepository;
     private final JwtUtil jwtUtil;
-
-    public CommentService(PostRepository postRepository, CommentRepository commentRepository, JwtUtil jwtUtil) {
-        this.postRepository = postRepository;
-        this.commentRepository = commentRepository;
-        this.jwtUtil = jwtUtil;
-    }
 
     @Transactional
     public CommentResponseDto createComment(CommentRequestDto requestDto, User user) {
@@ -69,6 +69,24 @@ public class CommentService {
         }
     }
 
+    @Transactional
+    public ApiResponseDto likeComment(Long id, User user) {
+        Comment comment = findComment(id);
+
+        CommentLike like = commentLikeRepository.findByLikeUserAndLikedComment(user, comment).orElse(null);
+
+        if(like == null) {
+            like = new CommentLike(user, comment);
+
+            comment.registerLike(like);
+            commentLikeRepository.save(like);
+            return new ApiResponseDto("좋아요를 등록했습니다.", 200);
+        } else {
+            comment.cancelLike(like);
+            commentLikeRepository.delete(like);
+            return new ApiResponseDto("좋아요를 해제했습니다.", 200);
+        }
+    }
 
     // 해당 게시글이 DB에 존재하는지 확인
     public Post findPost(Long id) {

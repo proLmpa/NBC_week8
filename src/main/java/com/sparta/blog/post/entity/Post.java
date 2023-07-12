@@ -1,14 +1,13 @@
 package com.sparta.blog.post.entity;
 
+import com.sparta.blog.comment.entity.Comment;
 import com.sparta.blog.common.entity.TimeStamped;
 import com.sparta.blog.like.post.entity.PostLike;
 import com.sparta.blog.post.dto.PostRequestDto;
-import com.sparta.blog.comment.entity.Comment;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
 
 import java.util.ArrayList;
 import java.util.List;

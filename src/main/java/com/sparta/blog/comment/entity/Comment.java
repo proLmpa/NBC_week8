@@ -1,13 +1,16 @@
 package com.sparta.blog.comment.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.sparta.blog.comment.dto.CommentRequestDto;
-import com.sparta.blog.post.entity.Post;
 import com.sparta.blog.common.entity.TimeStamped;
+import com.sparta.blog.like.comment.entity.CommentLike;
+import com.sparta.blog.post.entity.Post;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -25,10 +28,13 @@ public class Comment extends TimeStamped {
     @Column(name = "username", nullable = false)
     private String username;
 
-    // @JsonBackReference // 원래는 @ManyToOne의 FETCHTYPE을 Lazy로 바꿔야 한다.
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
     private Post post;
+
+    @Column(name = "like_count")
+    @OneToMany(mappedBy = "likedComment", orphanRemoval = true)
+    private List<CommentLike> commentLikes = new ArrayList<>();
 
     public Comment(CommentRequestDto requestDto, String username){
         this.contents = requestDto.getContents();
@@ -37,5 +43,14 @@ public class Comment extends TimeStamped {
 
     public void update(CommentRequestDto requestDto) {
         this.contents = requestDto.getContents();
+    }
+
+    public void registerLike(CommentLike commentLike) {
+        this.commentLikes.add(commentLike);
+        commentLike.setLikedComment(this);
+    }
+
+    public void cancelLike(CommentLike commentLike) {
+        this.commentLikes.remove(commentLike);
     }
 }

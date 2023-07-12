@@ -31,4 +31,9 @@ public class CommentController {
         commentService.deleteComment(id, userDetails.getUser());
         return new ApiResponseDto("SUCCESS_DELETE_COMMENT", HttpStatus.OK.value());
     }
+
+    @PostMapping("/comment/{id}/like")
+    public ApiResponseDto likeComment(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return commentService.likeComment(id, userDetails.getUser());
+    }
 }
