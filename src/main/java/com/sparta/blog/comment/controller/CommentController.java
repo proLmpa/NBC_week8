@@ -3,7 +3,7 @@ package com.sparta.blog.comment.controller;
 import com.sparta.blog.comment.dto.CommentRequestDto;
 import com.sparta.blog.comment.dto.CommentResponseDto;
 import com.sparta.blog.comment.service.CommentService;
-import com.sparta.blog.common.dto.ApiResult;
+import com.sparta.blog.common.dto.ApiResponseDto;
 import com.sparta.blog.user.security.UserDetailsImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -27,8 +27,8 @@ public class CommentController {
     }
 
     @DeleteMapping("/comment/{id}")
-    public ApiResult deleteComment(@PathVariable("id") Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ApiResponseDto deleteComment(@PathVariable("id") Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         commentService.deleteComment(id, userDetails.getUser());
-        return new ApiResult("SUCCESS_DELETE_COMMENT", HttpStatus.OK.value());
+        return new ApiResponseDto("SUCCESS_DELETE_COMMENT", HttpStatus.OK.value());
     }
 }

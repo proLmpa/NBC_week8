@@ -1,6 +1,6 @@
 package com.sparta.blog.user.controller;
 
-import com.sparta.blog.common.dto.ApiResult;
+import com.sparta.blog.common.dto.ApiResponseDto;
 import com.sparta.blog.common.error.BlogErrorCode;
 import com.sparta.blog.common.exception.BlogException;
 import com.sparta.blog.user.dto.UserInfoDto;
@@ -30,7 +30,7 @@ public class UserController {
     }
 
     @PostMapping("/user/signup")
-    public ApiResult signup(@Valid @RequestBody UserRequestDto requestDto, BindingResult bindingResult) {
+    public ApiResponseDto signup(@Valid @RequestBody UserRequestDto requestDto, BindingResult bindingResult) {
         // Validation 예외 처리
         List<FieldError> fieldErrors = bindingResult.getFieldErrors();
         if(fieldErrors.size() > 0) {
@@ -41,7 +41,7 @@ public class UserController {
         }
 
         userService.signup(requestDto);
-        return new ApiResult("SUCCESS_SIGN_UP", HttpStatus.OK.value());
+        return new ApiResponseDto("SUCCESS_SIGN_UP", HttpStatus.OK.value());
     }
 
     @GetMapping("/user-info")
