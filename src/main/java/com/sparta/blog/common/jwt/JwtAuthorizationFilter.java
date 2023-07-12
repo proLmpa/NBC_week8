@@ -1,7 +1,7 @@
 package com.sparta.blog.common.jwt;
 
-import com.sparta.blog.common.error.BlogErrorCode;
-import com.sparta.blog.common.exception.BlogException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sparta.blog.common.dto.ApiResponseDto;
 import com.sparta.blog.user.security.UserDetailsServiceImpl;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
@@ -37,7 +37,13 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         if(StringUtils.hasText(tokenValue)) {
 
             if(!jwtUtil.validateToken(tokenValue)) {
-                throw new BlogException(BlogErrorCode.INVALID_TOKEN, null); // 유효하지 않은 token 입니다.
+                res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                res.setContentType("application/json");
+                ApiResponseDto responseDto = new ApiResponseDto("INVALID_TOKEN", 400);
+                String result = new ObjectMapper().writeValueAsString(responseDto);
+
+                res.getOutputStream().print(result);
+                return;
             }
 
             Claims info = jwtUtil.getUserInfoFromToken(tokenValue);
