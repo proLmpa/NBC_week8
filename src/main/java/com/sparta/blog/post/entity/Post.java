@@ -1,12 +1,14 @@
 package com.sparta.blog.post.entity;
 
 import com.sparta.blog.common.entity.TimeStamped;
+import com.sparta.blog.like.post.entity.PostLike;
 import com.sparta.blog.post.dto.PostRequestDto;
 import com.sparta.blog.comment.entity.Comment;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +36,10 @@ public class Post extends TimeStamped {
     @OneToMany(mappedBy = "post", orphanRemoval = true)
     private List<Comment> commentList = new ArrayList<>();
 
+    @Column(name = "like_count")
+    @OneToMany(mappedBy = "likedPost", orphanRemoval = true)
+    private List<PostLike> postLikes = new ArrayList<>();
+
     public void addCommentList(Comment comment) {
         this.commentList.add(comment);
         comment.setPost(this);
@@ -48,5 +54,14 @@ public class Post extends TimeStamped {
     public void update(PostRequestDto requestDto) {
         this.title = requestDto.getTitle();
         this.contents = requestDto.getContents();
+    }
+
+    public void registerLike(PostLike postLike) {
+        this.postLikes.add(postLike);
+        postLike.setLikedPost(this);
+    }
+
+    public void cancelLike(PostLike postLike) {
+        this.postLikes.remove(postLike);
     }
 }

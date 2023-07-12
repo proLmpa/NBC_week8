@@ -1,6 +1,6 @@
 package com.sparta.blog.post.controller;
 
-import com.sparta.blog.common.dto.ApiResult;
+import com.sparta.blog.common.dto.ApiResponseDto;
 import com.sparta.blog.post.dto.PostRequestDto;
 import com.sparta.blog.post.dto.PostResponseDto;
 import com.sparta.blog.post.service.PostService;
@@ -49,10 +49,16 @@ public class PostController {
 
     // 선택한 게시글 삭제하기 (요구사항.5)
     @DeleteMapping("/post/{id}")
-    public ApiResult deletePost(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ApiResponseDto deletePost(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         // UserDetails.getUser() : Authentication의 Principle
         postService.deletePost(id, userDetails.getUser());
 
-        return new ApiResult("SUCCESS_DELETE_POST", HttpStatus.OK.value());
+        return new ApiResponseDto("SUCCESS_DELETE_POST", HttpStatus.OK.value());
+    }
+
+    // 선택한 게시글 좋아요 등록/해제
+    @PostMapping("/post/{id}/like")
+    public ApiResponseDto likePost(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return postService.likePost(id, userDetails.getUser());
     }
 }
