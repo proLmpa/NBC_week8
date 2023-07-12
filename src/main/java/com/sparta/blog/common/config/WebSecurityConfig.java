@@ -7,6 +7,7 @@ import com.sparta.blog.user.security.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -48,12 +49,10 @@ public class WebSecurityConfig {
 
         http.authorizeHttpRequests((authorizeHttpRequests) ->
                 authorizeHttpRequests
-                        .requestMatchers("/api/**").permitAll() // '/api/'로 시작하는 요청 모두 접근 허가
+                        .requestMatchers(HttpMethod.POST, "/api/user/**").permitAll() // '/api/'로 시작하는 요청 모두 접근 허가
+                        .requestMatchers(HttpMethod.GET, "/api/post", "/api/post/**").permitAll()
                         .anyRequest().authenticated() // 그 외 모든 요청 인증처리
         );
-//
-//        http.formLogin(
-//                (formLogin) -> formLogin.loginPage("/api/user/login-page").permitAll());
 
         // 필터 관리
         http.addFilterBefore(jwtAuthorizationFilter(), JwtAuthenticationFilter.class);
