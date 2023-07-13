@@ -19,14 +19,16 @@ public class CommentLike {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private User likeUser;
+    private User commentLikeUser;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "comment_id")
     private Comment likedComment;
 
     public CommentLike(User user, Comment comment) {
-        this.likeUser = user;
+        this.commentLikeUser = user;
         this.likedComment = comment;
+        user.getCommentLikes().add(this);
+        comment.getCommentLikes().add(this);
     }
 }

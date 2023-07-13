@@ -47,13 +47,4 @@ public class Comment extends TimeStamped {
     public void update(CommentRequestDto requestDto) {
         this.contents = requestDto.getContents();
     }
-
-    public void registerLike(CommentLike commentLike) {
-        this.commentLikes.add(commentLike);
-        commentLike.setLikedComment(this);
-    }
-
-    public void cancelLike(CommentLike commentLike) {
-        this.commentLikes.remove(commentLike);
-    }
 }

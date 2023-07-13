@@ -1,6 +1,7 @@
 package com.sparta.blog.user.entity;
 
 import com.sparta.blog.comment.entity.Comment;
+import com.sparta.blog.like.comment.entity.CommentLike;
 import com.sparta.blog.like.post.entity.PostLike;
 import com.sparta.blog.post.entity.Post;
 import jakarta.persistence.*;
@@ -39,6 +40,10 @@ public class User {
     @Column(name = "post_likes")
     @OneToMany(mappedBy = "likeUser", orphanRemoval = true)
     private List<PostLike> postLikes = new ArrayList<>();
+
+    @Column(name = "comment_likes")
+    @OneToMany(mappedBy = "commentLikeUser", orphanRemoval = true)
+    private List<CommentLike> commentLikes = new ArrayList<>();
 
     public User(String username, String password, UserRoleEnum role) {
         this.username = username;
