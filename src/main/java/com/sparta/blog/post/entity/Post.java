@@ -4,6 +4,7 @@ import com.sparta.blog.comment.entity.Comment;
 import com.sparta.blog.common.entity.TimeStamped;
 import com.sparta.blog.like.post.entity.PostLike;
 import com.sparta.blog.post.dto.PostRequestDto;
+import com.sparta.blog.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,8 +26,9 @@ public class Post extends TimeStamped {
     @Column(name = "title", nullable = false)
     private String title;
 
-    @Column(name = "username", nullable = false)
-    private String username;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "username", nullable = false)
+    private User postAuthor;
 
     @Column(name = "contents", nullable = false)
     private String contents;
@@ -44,10 +46,11 @@ public class Post extends TimeStamped {
         comment.setPost(this);
     }
 
-    public Post(PostRequestDto requestDto, String username) {
+    public Post(PostRequestDto requestDto, User user) {
         this.title = requestDto.getTitle();
-        this.username = username;
         this.contents = requestDto.getContents();
+        this.postAuthor = user;
+        user.getPosts().add(this);
     }
 
     public void update(PostRequestDto requestDto) {

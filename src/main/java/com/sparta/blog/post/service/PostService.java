@@ -14,6 +14,7 @@ import com.sparta.blog.post.entity.Post;
 import com.sparta.blog.post.repository.PostRepository;
 import com.sparta.blog.user.entity.User;
 import com.sparta.blog.user.entity.UserRoleEnum;
+import com.sparta.blog.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +24,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 public class PostService {
+    private final UserRepository userRepository;
     private final PostRepository  postRepository;
     private final CommentRepository commentRepository;
     private final PostLikeRepository postLikeRepository;
@@ -31,8 +33,11 @@ public class PostService {
     // 게시글 작성하기 (요구사항.2)
     @Transactional
     public PostResponseDto createPost(PostRequestDto requestDto, User user){
+        // userRepository -> User
+        User foundUser = findUser(user);
+
         // RequestDto -> Entity
-        Post post = new Post(requestDto, user.getUsername());
+        Post post = new Post(requestDto, foundUser);
 
         // DB 저장
         Post savedPost = postRepository.save(post);
@@ -112,14 +117,21 @@ public class PostService {
         }
     }
 
+    @Transactional(readOnly = true)
+    public User findUser(User user) {
+        return userRepository.findByUsername(user.getUsername()).orElseThrow(() ->
+                new BlogException(BlogErrorCode.NOT_FOUND_USER, null));
+    }
+
     // 해당 게시글이 DB에 존재하는지 확인
+    @Transactional(readOnly = true)
     public Post findPost(Long id) {
         return postRepository.findById(id).orElseThrow(() ->
                 new BlogException(BlogErrorCode.NOT_FOUND_POST, null));
     }
 
     public boolean matchUser(Post post, User user) {
-        return post.getUsername().equals(user.getUsername());
+        return post.getPostAuthor().getUsername().equals(user.getUsername());
     }
 
 }

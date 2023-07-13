@@ -1,9 +1,13 @@
 package com.sparta.blog.user.entity;
 
+import com.sparta.blog.post.entity.Post;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -21,6 +25,10 @@ public class User {
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
+
+    @Column(name = "posts")
+    @OneToMany(mappedBy = "postAuthor", orphanRemoval = true)
+    private List<Post> posts = new ArrayList<>();
 
     public User(String username, String password, UserRoleEnum role) {
         this.username = username;
