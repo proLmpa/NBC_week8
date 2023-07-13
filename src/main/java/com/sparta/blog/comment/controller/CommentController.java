@@ -34,6 +34,7 @@ public class CommentController {
 
     @PostMapping("/comment/{id}/like")
     public ApiResponseDto likeComment(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return commentService.likeComment(id, userDetails.getUser());
+        String statusMessage = commentService.likeComment(id, userDetails.getUser());
+        return new ApiResponseDto(statusMessage, HttpStatus.OK.value());
     }
 }

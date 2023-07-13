@@ -59,6 +59,7 @@ public class PostController {
     // 선택한 게시글 좋아요 등록/해제
     @PostMapping("/post/{id}/like")
     public ApiResponseDto likePost(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return postService.likePost(id, userDetails.getUser());
+        String statusMessage = postService.likePost(id, userDetails.getUser());
+        return new ApiResponseDto(statusMessage, HttpStatus.OK.value());
     }
 }
