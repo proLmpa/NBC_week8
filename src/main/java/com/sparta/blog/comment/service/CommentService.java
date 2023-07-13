@@ -80,7 +80,7 @@ public class CommentService {
         User foundUser = findUser(user);
         Comment comment = findComment(id);
 
-        CommentLike like = commentLikeRepository.findByCommentLikeUserAndLikedComment(foundUser, comment).orElse(null);
+        CommentLike like = commentLikeRepository.findByUserAndComment(foundUser, comment).orElse(null);
 
         if(like == null) {
             like = new CommentLike(foundUser, comment);
@@ -112,7 +112,7 @@ public class CommentService {
     }
 
     private boolean matchUser(Comment comment, User user) {
-        return comment.getCommentAuthor().getUsername().equals(user.getUsername());
+        return comment.getUser().getUsername().equals(user.getUsername());
     }
 
     private void cancelLike(User user, Comment comment, CommentLike commentLike) {

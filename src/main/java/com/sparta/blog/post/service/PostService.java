@@ -104,7 +104,7 @@ public class PostService {
         User foundUser = findUser(user);
         Post post = findPost(id);
 
-        PostLike like = postLikeRepository.findByLikeUserAndLikedPost(foundUser, post).orElse(null);
+        PostLike like = postLikeRepository.findByUserAndPost(foundUser, post).orElse(null);
 
         if(like == null){
             like = new PostLike(foundUser, post);
@@ -131,7 +131,7 @@ public class PostService {
     }
 
     private boolean matchUser(Post post, User user) {
-        return post.getPostAuthor().getUsername().equals(user.getUsername());
+        return post.getUser().getUsername().equals(user.getUsername());
     }
 
     private void cancelLike(User user, Post post, PostLike postLike) {

@@ -30,19 +30,19 @@ public class User {
     private UserRoleEnum role;
 
     @Column(name = "posts")
-    @OneToMany(mappedBy = "postAuthor", orphanRemoval = true)
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<Post> posts = new ArrayList<>();
 
     @Column(name = "comments")
-    @OneToMany(mappedBy = "commentAuthor", orphanRemoval = true)
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 
     @Column(name = "post_likes")
-    @OneToMany(mappedBy = "likeUser", orphanRemoval = true)
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<PostLike> postLikes = new ArrayList<>();
 
     @Column(name = "comment_likes")
-    @OneToMany(mappedBy = "commentLikeUser", orphanRemoval = true)
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<CommentLike> commentLikes = new ArrayList<>();
 
     public User(String username, String password, UserRoleEnum role) {

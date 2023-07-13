@@ -19,15 +19,15 @@ public class PostLike {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private User likeUser;
+    private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
-    private Post likedPost;
+    private Post post;
 
     public PostLike(User user, Post post) {
-        this.likeUser = user;
-        this.likedPost = post;
+        this.user = user;
+        this.post = post;
         user.getPostLikes().add(this);
         post.getPostLikes().add(this);
     }

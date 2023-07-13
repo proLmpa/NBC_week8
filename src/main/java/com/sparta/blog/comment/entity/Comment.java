@@ -28,19 +28,19 @@ public class Comment extends TimeStamped {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "username", nullable = false)
-    private User commentAuthor;
+    private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
     private Post post;
 
     @Column(name = "like_count")
-    @OneToMany(mappedBy = "likedComment", orphanRemoval = true)
+    @OneToMany(mappedBy = "comment", orphanRemoval = true)
     private List<CommentLike> commentLikes = new ArrayList<>();
 
     public Comment(CommentRequestDto requestDto, User user){
         this.contents = requestDto.getContents();
-        this.commentAuthor = user;
+        this.user = user;
         user.getComments().add(this);
     }
 

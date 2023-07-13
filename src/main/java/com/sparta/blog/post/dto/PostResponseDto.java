@@ -23,7 +23,7 @@ public class PostResponseDto {
     public PostResponseDto(Post post) {
         this.postId = post.getId();
         this.title = post.getTitle();
-        this.username = post.getPostAuthor().getUsername();
+        this.username = post.getUser().getUsername();
         this.contents = post.getContents();
         this.likes = post.getPostLikes().size();
         this.createdAt = post.getCreatedAt();
@@ -34,7 +34,7 @@ public class PostResponseDto {
     public PostResponseDto(Post post, List<Comment> commentList) {
         this.postId = post.getId();
         this.title = post.getTitle();
-        this.username = post.getPostAuthor().getUsername();
+        this.username = post.getUser().getUsername();
         this.contents = post.getContents();
         this.likes = post.getPostLikes().size();
         this.createdAt = post.getCreatedAt();

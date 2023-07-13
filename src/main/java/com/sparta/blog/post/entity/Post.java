@@ -28,7 +28,7 @@ public class Post extends TimeStamped {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "username", nullable = false)
-    private User postAuthor;
+    private User user;
 
     @Column(name = "contents", nullable = false)
     private String contents;
@@ -38,13 +38,13 @@ public class Post extends TimeStamped {
     private List<Comment> commentList = new ArrayList<>();
 
     @Column(name = "like_count")
-    @OneToMany(mappedBy = "likedPost", orphanRemoval = true)
+    @OneToMany(mappedBy = "post", orphanRemoval = true)
     private List<PostLike> postLikes = new ArrayList<>();
 
     public Post(PostRequestDto requestDto, User user) {
         this.title = requestDto.getTitle();
         this.contents = requestDto.getContents();
-        this.postAuthor = user;
+        this.user = user;
         user.getPosts().add(this);
     }
 
