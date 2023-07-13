@@ -33,14 +33,27 @@ public class CommentService {
         // userRepository -> User
         User foundUser = findUser(user);
 
+        Long postId = requestDto.getPostId();
+        Long parentId = requestDto.getParentId();
         // 선택한 게시글의 DB 존재 여부 확인
-        Post post = findPost(requestDto.getPostId());
+        Post post = findPost(postId);
+        Comment comment;
 
-        // 댓글 등록 후 등록된 댓글 반환하기
-        Comment comment = new Comment(requestDto, foundUser);
-        post.addCommentList(comment);
+        if(parentId == 0) {
+            // Post에 새 Comment 등록 시
+            comment = new Comment(requestDto, foundUser);
+            post.addCommentList(comment);
 
-        commentRepository.save(comment);
+            commentRepository.save(comment);
+        } else {
+            // 기존 Comment에 새 Comment 등록 시
+            comment = findComment(parentId);
+            Comment reply = new Comment(requestDto, foundUser);
+            reply.addReplyList(comment);
+
+            commentRepository.save(reply);
+            comment = reply;
+        }
 
         return new CommentResponseDto(comment);
     }
@@ -97,18 +110,18 @@ public class CommentService {
 
     private User findUser(User user) {
         return userRepository.findByUsername(user.getUsername()).orElseThrow(() ->
-                new BlogException(BlogErrorCode.NOT_FOUND_USER, null));
+                new BlogException(BlogErrorCode.USER_NOT_FOUND, null));
     }
 
     // 해당 게시글이 DB에 존재하는지 확인
     private Post findPost(Long id) {
         return postRepository.findById(id).orElseThrow(() ->
-                new BlogException(BlogErrorCode.NOT_FOUND_POST, null));
+                new BlogException(BlogErrorCode.POST_NOT_FOUND, null));
     }
 
     private Comment findComment(Long id) {
         return commentRepository.findById(id).orElseThrow(() ->
-                new BlogException(BlogErrorCode.NOT_FOUND_COMMENT, null));
+                new BlogException(BlogErrorCode.COMMENT_NOT_FOUND, null));
     }
 
     private boolean matchUser(Comment comment, User user) {

@@ -121,13 +121,13 @@ public class PostService {
 
     private User findUser(User user) {
         return userRepository.findByUsername(user.getUsername()).orElseThrow(() ->
-                new BlogException(BlogErrorCode.NOT_FOUND_USER, null));
+                new BlogException(BlogErrorCode.USER_NOT_FOUND, null));
     }
 
     // 해당 게시글이 DB에 존재하는지 확인
     private Post findPost(Long id) {
         return postRepository.findById(id).orElseThrow(() ->
-                new BlogException(BlogErrorCode.NOT_FOUND_POST, null));
+                new BlogException(BlogErrorCode.POST_NOT_FOUND, null));
     }
 
     private boolean matchUser(Post post, User user) {
