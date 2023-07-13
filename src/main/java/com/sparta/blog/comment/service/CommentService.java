@@ -75,7 +75,7 @@ public class CommentService {
     }
 
     @Transactional
-    public ApiResponseDto likeComment(Long id, User user) {
+    public String likeComment(Long id, User user) {
         // userRepository -> User
         User foundUser = findUser(user);
         Comment comment = findComment(id);
@@ -86,39 +86,36 @@ public class CommentService {
             like = new CommentLike(foundUser, comment);
 
             commentLikeRepository.save(like);
-            return new ApiResponseDto("좋아요를 등록했습니다.", 200);
+            return "좋아요를 등록했습니다.";
         } else {
             cancelLike(foundUser, comment, like);
 
             commentLikeRepository.delete(like);
-            return new ApiResponseDto("좋아요를 해제했습니다.", 200);
+            return "좋아요를 해제했습니다.";
         }
     }
 
-    @Transactional(readOnly = true)
-    public User findUser(User user) {
+    private User findUser(User user) {
         return userRepository.findByUsername(user.getUsername()).orElseThrow(() ->
                 new BlogException(BlogErrorCode.NOT_FOUND_USER, null));
     }
 
     // 해당 게시글이 DB에 존재하는지 확인
-    @Transactional(readOnly = true)
-    public Post findPost(Long id) {
+    private Post findPost(Long id) {
         return postRepository.findById(id).orElseThrow(() ->
                 new BlogException(BlogErrorCode.NOT_FOUND_POST, null));
     }
 
-    @Transactional(readOnly = true)
-    public Comment findComment(Long id) {
+    private Comment findComment(Long id) {
         return commentRepository.findById(id).orElseThrow(() ->
                 new BlogException(BlogErrorCode.NOT_FOUND_COMMENT, null));
     }
 
-    public boolean matchUser(Comment comment, User user) {
+    private boolean matchUser(Comment comment, User user) {
         return comment.getCommentAuthor().getUsername().equals(user.getUsername());
     }
 
-    public void cancelLike(User user, Comment comment, CommentLike commentLike) {
+    private void cancelLike(User user, Comment comment, CommentLike commentLike) {
         user.getCommentLikes().remove(commentLike);
         comment.getCommentLikes().remove(commentLike);
     }

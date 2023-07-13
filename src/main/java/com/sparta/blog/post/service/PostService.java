@@ -99,7 +99,7 @@ public class PostService {
     }
 
     @Transactional
-    public ApiResponseDto likePost(Long id, User user) {
+    public String likePost(Long id, User user) {
         // userRepository -> User
         User foundUser = findUser(user);
         Post post = findPost(id);
@@ -110,33 +110,31 @@ public class PostService {
             like = new PostLike(foundUser, post);
 
             postLikeRepository.save(like);
-            return new ApiResponseDto("좋아요를 등록했습니다.", 200);
+            return "좋아요를 등록했습니다.";
         } else {
             cancelLike(foundUser, post, like);
 
             postLikeRepository.delete(like);
-            return new ApiResponseDto("좋아요를 해제했습니다.", 200);
+            return "좋아요를 해제했습니다.";
         }
     }
 
-    @Transactional(readOnly = true)
-    public User findUser(User user) {
+    private User findUser(User user) {
         return userRepository.findByUsername(user.getUsername()).orElseThrow(() ->
                 new BlogException(BlogErrorCode.NOT_FOUND_USER, null));
     }
 
     // 해당 게시글이 DB에 존재하는지 확인
-    @Transactional(readOnly = true)
-    public Post findPost(Long id) {
+    private Post findPost(Long id) {
         return postRepository.findById(id).orElseThrow(() ->
                 new BlogException(BlogErrorCode.NOT_FOUND_POST, null));
     }
 
-    public boolean matchUser(Post post, User user) {
+    private boolean matchUser(Post post, User user) {
         return post.getPostAuthor().getUsername().equals(user.getUsername());
     }
 
-    public void cancelLike(User user, Post post, PostLike postLike) {
+    private void cancelLike(User user, Post post, PostLike postLike) {
         user.getPostLikes().remove(postLike);
         post.getPostLikes().remove(postLike);
     }
