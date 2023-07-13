@@ -100,18 +100,20 @@ public class PostService {
 
     @Transactional
     public ApiResponseDto likePost(Long id, User user) {
+        // userRepository -> User
+        User foundUser = findUser(user);
         Post post = findPost(id);
 
-        PostLike like = postLikeRepository.findByLikeUserAndLikedPost(user, post).orElse(null);
+        PostLike like = postLikeRepository.findByLikeUserAndLikedPost(foundUser, post).orElse(null);
 
         if(like == null){
-            like = new PostLike(user, post);
+            like = new PostLike(foundUser, post);
 
-            post.registerLike(like);
             postLikeRepository.save(like);
             return new ApiResponseDto("좋아요를 등록했습니다.", 200);
         } else {
-            post.cancelLike(like);
+            cancelLike(foundUser, post, like);
+
             postLikeRepository.delete(like);
             return new ApiResponseDto("좋아요를 해제했습니다.", 200);
         }
@@ -134,4 +136,8 @@ public class PostService {
         return post.getPostAuthor().getUsername().equals(user.getUsername());
     }
 
+    public void cancelLike(User user, Post post, PostLike postLike) {
+        user.getPostLikes().remove(postLike);
+        post.getPostLikes().remove(postLike);
+    }
 }

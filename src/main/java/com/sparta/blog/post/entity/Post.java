@@ -41,11 +41,6 @@ public class Post extends TimeStamped {
     @OneToMany(mappedBy = "likedPost", orphanRemoval = true)
     private List<PostLike> postLikes = new ArrayList<>();
 
-    public void addCommentList(Comment comment) {
-        this.commentList.add(comment);
-        comment.setPost(this);
-    }
-
     public Post(PostRequestDto requestDto, User user) {
         this.title = requestDto.getTitle();
         this.contents = requestDto.getContents();
@@ -53,17 +48,13 @@ public class Post extends TimeStamped {
         user.getPosts().add(this);
     }
 
+    public void addCommentList(Comment comment) {
+        this.commentList.add(comment);
+        comment.setPost(this);
+    }
+
     public void update(PostRequestDto requestDto) {
         this.title = requestDto.getTitle();
         this.contents = requestDto.getContents();
-    }
-
-    public void registerLike(PostLike postLike) {
-        this.postLikes.add(postLike);
-        postLike.setLikedPost(this);
-    }
-
-    public void cancelLike(PostLike postLike) {
-        this.postLikes.remove(postLike);
     }
 }
