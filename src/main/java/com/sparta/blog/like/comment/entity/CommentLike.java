@@ -31,4 +31,9 @@ public class CommentLike {
         user.getCommentLikes().add(this);
         comment.getCommentLikes().add(this);
     }
+
+    public void cancelLike(CommentLike like) {
+        user.getCommentLikes().remove(like);
+        comment.getCommentLikes().remove(like);
+    }
 }

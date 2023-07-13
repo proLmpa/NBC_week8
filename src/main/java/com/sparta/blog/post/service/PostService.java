@@ -112,7 +112,7 @@ public class PostService {
             postLikeRepository.save(like);
             return "좋아요를 등록했습니다.";
         } else {
-            cancelLike(foundUser, post, like);
+            like.cancelLike(like);
 
             postLikeRepository.delete(like);
             return "좋아요를 해제했습니다.";
@@ -132,10 +132,5 @@ public class PostService {
 
     private boolean matchUser(Post post, User user) {
         return post.getUser().getUsername().equals(user.getUsername());
-    }
-
-    private void cancelLike(User user, Post post, PostLike postLike) {
-        user.getPostLikes().remove(postLike);
-        post.getPostLikes().remove(postLike);
     }
 }

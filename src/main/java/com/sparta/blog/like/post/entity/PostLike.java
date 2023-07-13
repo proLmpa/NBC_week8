@@ -31,4 +31,9 @@ public class PostLike {
         user.getPostLikes().add(this);
         post.getPostLikes().add(this);
     }
+
+    public void cancelLike(PostLike like) {
+        user.getPostLikes().remove(like);
+        post.getPostLikes().remove(like);
+    }
 }

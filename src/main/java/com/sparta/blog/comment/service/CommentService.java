@@ -88,7 +88,7 @@ public class CommentService {
             commentLikeRepository.save(like);
             return "좋아요를 등록했습니다.";
         } else {
-            cancelLike(foundUser, comment, like);
+            like.cancelLike(like);
 
             commentLikeRepository.delete(like);
             return "좋아요를 해제했습니다.";
@@ -113,10 +113,5 @@ public class CommentService {
 
     private boolean matchUser(Comment comment, User user) {
         return comment.getUser().getUsername().equals(user.getUsername());
-    }
-
-    private void cancelLike(User user, Comment comment, CommentLike commentLike) {
-        user.getCommentLikes().remove(commentLike);
-        comment.getCommentLikes().remove(commentLike);
     }
 }
