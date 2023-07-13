@@ -71,7 +71,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         response.setContentType("application/json");
-        ApiResponseDto responseDto = new ApiResponseDto("CANNOT_FIND_USER", 400);
+        ApiResponseDto responseDto = new ApiResponseDto("FAILED_LOGIN", 400);
 
         String result = new ObjectMapper().writeValueAsString(responseDto);
         response.getOutputStream().print(result);
