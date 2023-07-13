@@ -2,7 +2,6 @@ package com.sparta.blog.user.service;
 
 import com.sparta.blog.common.error.BlogErrorCode;
 import com.sparta.blog.common.exception.BlogException;
-import com.sparta.blog.common.jwt.JwtUtil;
 import com.sparta.blog.user.dto.UserRequestDto;
 import com.sparta.blog.user.entity.User;
 import com.sparta.blog.user.entity.UserRoleEnum;
@@ -17,12 +16,10 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtUtil jwtUtil;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtUtil jwtUtil) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        this.jwtUtil = jwtUtil;
     }
 
     public void signup(UserRequestDto requestDto) {
@@ -44,5 +41,11 @@ public class UserService {
         // 사용자 등록
         User user = new User(username, password, role);
         userRepository.save(user);
+    }
+
+    public void signout(User user) {
+        String username = user.getUsername();
+
+        userRepository.findByUsername(username).ifPresent(userRepository::delete);
     }
 }

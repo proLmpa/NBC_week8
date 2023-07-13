@@ -25,6 +25,6 @@ public class UserServiceBuilder {
     }
 
     public UserService createService() {
-        return new UserService(userRepository, passwordEncoder, jwtUtil);
+        return new UserService(userRepository, passwordEncoder);
     }
 }

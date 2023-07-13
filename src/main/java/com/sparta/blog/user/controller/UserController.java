@@ -44,6 +44,12 @@ public class UserController {
         return new ApiResponseDto("SUCCESS_SIGN_UP", HttpStatus.OK.value());
     }
 
+    @DeleteMapping("/user/signout")
+    public ApiResponseDto signout(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        userService.signout(userDetails.getUser());
+        return new ApiResponseDto("SUCCESS_SIGN_OUT", HttpStatus.OK.value());
+    }
+
     @GetMapping("/user-info")
     public UserInfoDto getUserInfo(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         String username = userDetails.getUser().getUsername();
