@@ -34,6 +34,14 @@ public class Comment extends TimeStamped {
     @JoinColumn(name = "post_id")
     private Post post;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_comment")
+    private Comment parent;
+
+    @Column(name = "child_comments")
+    @OneToMany(mappedBy = "parent", orphanRemoval = true)
+    private List<Comment> children = new ArrayList<>();
+
     @Column(name = "like_count")
     @OneToMany(mappedBy = "comment", orphanRemoval = true)
     private List<CommentLike> commentLikes = new ArrayList<>();
@@ -41,7 +49,13 @@ public class Comment extends TimeStamped {
     public Comment(CommentRequestDto requestDto, User user){
         this.contents = requestDto.getContents();
         this.user = user;
+        this.parent = null;
         user.getComments().add(this);
+    }
+
+    public void addReplyList(Comment comment) {
+        this.parent = comment;
+        comment.getChildren().add(this);
     }
 
     public void update(CommentRequestDto requestDto) {
