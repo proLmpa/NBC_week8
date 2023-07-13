@@ -5,6 +5,7 @@ import com.sparta.blog.post.dto.PostRequestDto;
 import com.sparta.blog.post.dto.PostResponseDto;
 import com.sparta.blog.post.service.PostService;
 import com.sparta.blog.user.security.UserDetailsImpl;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -28,10 +29,13 @@ public class PostController {
         return postService.createPost(requestDto, userDetails.getUser());
     }
 
-    // 전체 게시글 작성 날짜 기준 내림차순으로 조회하기 (요구사항.1)
     @GetMapping("/post")
-    public List<PostResponseDto> getPosts() {
-        return postService.getPosts();
+    public Page<PostResponseDto> getPosts(
+            @RequestParam("page") int page,
+            @RequestParam("size") int size,
+            @RequestParam("sortBy") String sortBy,
+            @RequestParam("isAsc") boolean isAsc) {
+        return postService.getPosts(page-1, size, sortBy, isAsc);
     }
 
     // 선택한 게시글 조회하기 (요구사항.3)

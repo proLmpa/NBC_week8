@@ -16,6 +16,10 @@ import com.sparta.blog.user.entity.User;
 import com.sparta.blog.user.entity.UserRoleEnum;
 import com.sparta.blog.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,12 +50,18 @@ public class PostService {
         return new PostResponseDto(savedPost);
     }
 
-    // 전체 게시글 작성 날짜 내림차 순으로 조회하기 (요구사항.1)
+    // 페이징, 정렬 기능을 이용한 게시글 조회
     @Transactional(readOnly = true)
-    public List<PostResponseDto> getPosts() {
-        return postRepository.findAllByOrderByCreatedAtDesc().stream().map((Post post) -> new PostResponseDto(
+    public Page<PostResponseDto> getPosts(int page, int size, String sortBy, boolean isAsc) {
+        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Sort sort = Sort.by(direction, sortBy);
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        Page<Post> postPage = postRepository.findAll(pageable);
+
+        return postPage.map((Post post) -> new PostResponseDto(
                 post, commentRepository.findAllByPostIdOrderByCreatedAtDesc(post.getId())
-        )).toList();
+        ));
     }
 
     // 선택한 게시글 조회하기 (요구사항.3)
