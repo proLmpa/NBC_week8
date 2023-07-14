@@ -138,7 +138,7 @@ public class PostService {
         Post post = findPost(postId);
         Category category = findCategory(categoryId);
 
-        if(!matchUser(post, user) || category.getUser().getUsername().equals(user.getUsername())) {
+        if(!matchUser(post, user)) {
             throw new BlogException(BlogErrorCode.UNAUTHORIZED_USER, null);
         }
 
@@ -158,7 +158,7 @@ public class PostService {
 
         Page<Post> postPage = postRepository.findAllByPostCategoryList_CategoryId(categoryId, pageable);
 
-        Page<PostResponseDto> responseDtoPage = postPage.map(PostResponseDto::new);
+        Page<PostResponseDto> responseDtoPage = postPage.map(post -> new PostResponseDto(post, commentRepository.findAllByPostIdOrderByCreatedAtDesc(post.getId())));
 
         return responseDtoPage;
     }
