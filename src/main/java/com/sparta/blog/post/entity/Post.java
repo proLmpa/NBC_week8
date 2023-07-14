@@ -4,6 +4,7 @@ import com.sparta.blog.comment.entity.Comment;
 import com.sparta.blog.common.entity.TimeStamped;
 import com.sparta.blog.like.post.entity.PostLike;
 import com.sparta.blog.post.dto.PostRequestDto;
+import com.sparta.blog.postCategory.entity.PostCategory;
 import com.sparta.blog.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -40,6 +41,10 @@ public class Post extends TimeStamped {
     @Column(name = "like_count")
     @OneToMany(mappedBy = "post", orphanRemoval = true)
     private List<PostLike> postLikes = new ArrayList<>();
+
+    @Column(name = "categories")
+    @OneToMany(mappedBy = "post", orphanRemoval = true)
+    private List<PostCategory> postCategoryList = new ArrayList<>();
 
     public Post(PostRequestDto requestDto, User user) {
         this.title = requestDto.getTitle();
