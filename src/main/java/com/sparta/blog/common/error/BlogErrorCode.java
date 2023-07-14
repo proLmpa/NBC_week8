@@ -14,6 +14,8 @@ public enum BlogErrorCode {
     USER_NOT_FOUND(400, "해당 사용자는 존재하지 않습니다."),
     POST_NOT_FOUND(400, "해당 게시글은 존재하지 않습니다."), // (확인)
     COMMENT_NOT_FOUND(400, "해당 댓글은 존재하지 않습니다."), // (확인)
+    CATEGORY_ALREADY_EXISTS(400, "해당 카테고리는 이미 존재합니다."),
+    CATEGORY_NOT_FOUND(400, "해당 카테고리는 존재하지 않습니다."),
     UNAUTHORIZED_USER(400, "작성자만 수정/삭제할 수 있습니다."); // 필수 (확인)
 
     private final int errorCode;
