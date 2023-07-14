@@ -1,6 +1,6 @@
-# NBC_week6_2
+# NBC_week8
 
-* 작성한 API 명세
+* 작성한 API 명세 (수정 중)
 
 |API 명|Method|URL|Request Header|Request|Response|Response Header|
 |:---:|:---:|:---:|:---:|:---:|:---:|:---:|
@@ -19,9 +19,6 @@
 
 * `구현되지 않은 점`
 
-1. 로그인 실패 시 예외 처리와 성공 시 API result 반환 둘 다 못함
-   
-    a. 로그인 성공 시 statusCode와 statusMessage를 출력하지 않음
-   
-    b. 로그인 실패 시 그 원인이 `INVALID_TYPE_VALUE`인지 `WRONG_PASSWORD`인지 Client에 반환하지 않음
-2. 토큰 유효성 예외 처리가 Client로 반환되지 않고, local의 터미널에서만 출력됨
+1. 카테고리와 게시글 간의 N:M 연관관계 구현 (진행 중)
+2. RefreshToken 적용
+3. Swagger 적용
