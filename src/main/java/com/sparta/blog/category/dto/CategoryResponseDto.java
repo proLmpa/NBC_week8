@@ -5,11 +5,9 @@ import lombok.Getter;
 
 @Getter
 public class CategoryResponseDto {
-    private Long id;
     private String category;
 
     public CategoryResponseDto(Category category) {
-        this.id = category.getId();
         this.category = category.getCategory();
     }
 }
