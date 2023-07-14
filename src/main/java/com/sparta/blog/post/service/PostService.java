@@ -2,10 +2,8 @@ package com.sparta.blog.post.service;
 
 import com.sparta.blog.comment.entity.Comment;
 import com.sparta.blog.comment.repository.CommentRepository;
-import com.sparta.blog.common.dto.ApiResponseDto;
 import com.sparta.blog.common.error.BlogErrorCode;
 import com.sparta.blog.common.exception.BlogException;
-import com.sparta.blog.common.jwt.JwtUtil;
 import com.sparta.blog.like.post.entity.PostLike;
 import com.sparta.blog.like.post.repository.PostLikeRepository;
 import com.sparta.blog.post.dto.PostRequestDto;
@@ -32,7 +30,6 @@ public class PostService {
     private final PostRepository  postRepository;
     private final CommentRepository commentRepository;
     private final PostLikeRepository postLikeRepository;
-    private final JwtUtil jwtUtil;
 
     // 게시글 작성하기 (요구사항.2)
     @Transactional

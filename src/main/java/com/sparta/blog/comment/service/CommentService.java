@@ -4,10 +4,8 @@ import com.sparta.blog.comment.dto.CommentRequestDto;
 import com.sparta.blog.comment.dto.CommentResponseDto;
 import com.sparta.blog.comment.entity.Comment;
 import com.sparta.blog.comment.repository.CommentRepository;
-import com.sparta.blog.common.dto.ApiResponseDto;
 import com.sparta.blog.common.error.BlogErrorCode;
 import com.sparta.blog.common.exception.BlogException;
-import com.sparta.blog.common.jwt.JwtUtil;
 import com.sparta.blog.like.comment.entity.CommentLike;
 import com.sparta.blog.like.comment.repository.CommentLikeRepository;
 import com.sparta.blog.post.entity.Post;
@@ -26,7 +24,6 @@ public class CommentService {
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
     private final CommentLikeRepository commentLikeRepository;
-    private final JwtUtil jwtUtil;
 
     @Transactional
     public CommentResponseDto createComment(CommentRequestDto requestDto, User user) {

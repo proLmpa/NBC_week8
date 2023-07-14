@@ -54,7 +54,7 @@ public class CategoryService {
         }
     }
 
-    public Category findCategory(String category) {
+    private Category findCategory(String category) {
         return categoryRepository.findByCategory(category).orElse(null);
     }
 }
