@@ -24,7 +24,7 @@ public class Category {
     private String category;
 
     @Column(name = "categorized_posts")
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
     private List<Post> posts;
 
     public Category(CategoryRequestDto requestDto) {
