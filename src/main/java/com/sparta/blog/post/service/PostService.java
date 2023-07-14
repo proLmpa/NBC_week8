@@ -1,5 +1,7 @@
 package com.sparta.blog.post.service;
 
+import com.sparta.blog.category.entity.Category;
+import com.sparta.blog.category.repository.CategoryRepository;
 import com.sparta.blog.comment.entity.Comment;
 import com.sparta.blog.comment.repository.CommentRepository;
 import com.sparta.blog.common.error.BlogErrorCode;
@@ -10,6 +12,8 @@ import com.sparta.blog.post.dto.PostRequestDto;
 import com.sparta.blog.post.dto.PostResponseDto;
 import com.sparta.blog.post.entity.Post;
 import com.sparta.blog.post.repository.PostRepository;
+import com.sparta.blog.postCategory.entity.PostCategory;
+import com.sparta.blog.postCategory.repository.PostCategoryRepository;
 import com.sparta.blog.user.entity.User;
 import com.sparta.blog.user.entity.UserRoleEnum;
 import com.sparta.blog.user.repository.UserRepository;
@@ -22,6 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -30,6 +35,8 @@ public class PostService {
     private final PostRepository  postRepository;
     private final CommentRepository commentRepository;
     private final PostLikeRepository postLikeRepository;
+    private final CategoryRepository categoryRepository;
+    private final PostCategoryRepository postCategoryRepository;
 
     // 게시글 작성하기 (요구사항.2)
     @Transactional
@@ -126,6 +133,36 @@ public class PostService {
         }
     }
 
+    @Transactional
+    public void addCategory(Long postId, Long categoryId, User user) {
+        Post post = findPost(postId);
+        Category category = findCategory(categoryId);
+
+        if(!matchUser(post, user) || category.getUser().getUsername().equals(user.getUsername())) {
+            throw new BlogException(BlogErrorCode.UNAUTHORIZED_USER, null);
+        }
+
+        Optional<PostCategory> overlapCategory = postCategoryRepository.findByPostAndCategory(post, category);
+        if(overlapCategory.isPresent()) {
+            throw new BlogException(BlogErrorCode.CATEGORY_ALREADY_EXISTS, null);
+        }
+
+        postCategoryRepository.save(new PostCategory(post, category));
+    }
+
+    @Transactional(readOnly = true)
+    public Page<PostResponseDto> getPostsInCategory(Long categoryId, int i, int size, String sortBy, boolean isAsc) {
+        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Sort sort = Sort.by(direction, sortBy);
+        Pageable pageable = PageRequest.of(i, size, sort);
+
+        Page<Post> postPage = postRepository.findAllByPostCategoryList_CategoryId(categoryId, pageable);
+
+        Page<PostResponseDto> responseDtoPage = postPage.map(PostResponseDto::new);
+
+        return responseDtoPage;
+    }
+
     private User findUser(User user) {
         return userRepository.findByUsername(user.getUsername()).orElseThrow(() ->
                 new BlogException(BlogErrorCode.USER_NOT_FOUND, null));
@@ -135,6 +172,11 @@ public class PostService {
     private Post findPost(Long id) {
         return postRepository.findById(id).orElseThrow(() ->
                 new BlogException(BlogErrorCode.POST_NOT_FOUND, null));
+    }
+
+    private Category findCategory(Long id) {
+        return categoryRepository.findById(id).orElseThrow(() ->
+                new BlogException(BlogErrorCode.CATEGORY_NOT_FOUND, null));
     }
 
     private boolean matchUser(Post post, User user) {

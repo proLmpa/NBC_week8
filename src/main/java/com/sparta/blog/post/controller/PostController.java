@@ -66,4 +66,26 @@ public class PostController {
         String statusMessage = postService.likePost(id, userDetails.getUser());
         return new ApiResponseDto(statusMessage, HttpStatus.OK.value());
     }
+
+    // 게시글에 카테고리 등록하기
+    @PostMapping("/post/{postId}/category")
+    public void addCategory(
+            @PathVariable Long postId,
+            @RequestParam Long categoryId,
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ) {
+        postService.addCategory(postId, categoryId, userDetails.getUser());
+    }
+
+    // 카테고리 별로 게시글 보기
+    @GetMapping("/post/{id}/category")
+    public Page<PostResponseDto> getPostsInCategory(
+            @PathVariable Long id,
+            @RequestParam("page") int page,
+            @RequestParam("size") int size,
+            @RequestParam("sortBy") String sortBy,
+            @RequestParam("isAsc") boolean isAsc
+    ) {
+        return postService.getPostsInCategory(id, page-1, size, sortBy, isAsc);
+    }
 }
