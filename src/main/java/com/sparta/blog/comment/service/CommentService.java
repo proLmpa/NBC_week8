@@ -30,13 +30,13 @@ public class CommentService {
         // userRepository -> User
         User foundUser = findUser(user);
 
-        Long postId = requestDto.getPostId();
         Long parentId = requestDto.getParentId();
-        // 선택한 게시글의 DB 존재 여부 확인
-        Post post = findPost(postId);
         Comment comment;
 
         if(parentId == 0) {
+            // 선택한 게시글의 DB 존재 여부 확인
+            Post post = findPost(requestDto.getPostId());
+
             // Post에 새 Comment 등록 시
             comment = new Comment(requestDto, foundUser);
             post.addCommentList(comment);
