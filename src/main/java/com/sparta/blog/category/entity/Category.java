@@ -1,14 +1,10 @@
 package com.sparta.blog.category.entity;
 
-import com.sparta.blog.category.dto.CategoryRequestDto;
-import com.sparta.blog.post.entity.Post;
+import com.sparta.blog.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
@@ -23,12 +19,12 @@ public class Category {
     @Column(name = "category", nullable = false)
     private String category;
 
-    @Column(name = "categorized_posts")
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
-    private List<Post> posts;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
-    public Category(CategoryRequestDto requestDto) {
-        this.category = requestDto.getCategory();
-        posts = new ArrayList<>();
+    public Category(String category, User user) {
+        this.category = category;
+        this.user = user;
     }
 }

@@ -20,21 +20,21 @@ public class CategoryController {
     // 1. 카테고리 생성
     @PostMapping("/category")
     public ApiResponseDto createCategory(@RequestBody CategoryRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        categoryService.createCategory(requestDto);
+        categoryService.createCategory(requestDto, userDetails.getUser());
         return new ApiResponseDto(requestDto.getCategory() + " category registered", HttpStatus.OK.value());
     }
 
     // 2. 카테고리명 수정
     @PutMapping("/category")
     public ApiResponseDto updateCategory(@RequestBody CategoryRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        categoryService.updateCategory(requestDto);
+        categoryService.updateCategory(requestDto, userDetails.getUser());
         return new ApiResponseDto(requestDto.getCategory() + " category updated to " + requestDto.getNewCategory(), HttpStatus.OK.value());
     }
 
     // 3. 카테고리 삭제
     @DeleteMapping("/category")
     public ApiResponseDto deleteCategory(@RequestBody CategoryRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        categoryService.deleteCategory(requestDto);
+        categoryService.deleteCategory(requestDto, userDetails.getUser());
         return new ApiResponseDto(requestDto.getCategory() + " category deleted", HttpStatus.OK.value());
     }
 
